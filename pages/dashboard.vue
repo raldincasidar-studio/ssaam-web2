@@ -1,29 +1,29 @@
 <template lang="pug">
-    .container 
-        h3 Welcome!
-        h2 Raldin C. Disomimba 
-    
-
-        .form-container
-            span.label Action
-            
-            .flex-row
-                    a.button-link(href="#!") View Information
-                    nuxt-link.button-link(to="/") Logout
-                    
-        .form-container
-            span.label QR Code
-            .qrcode-center
-                .d-flex-center
-                    qr-code(text="Text to encode" size="200" bg-color="#F0F0F0" color="#213555")
-
-                h3 23-A-00045
-                h2 Raldin C. Disomimba
-
-                a.button-link(href="#!") Logout
+.container 
+    h3 Welcome!
+    h2 Raldin C. Disomimba 
 
 
-    </template>
+    .form-container
+        span.label Action
+        
+        .flex-row
+                a.button-link(href="#!") View Information
+                nuxt-link.button-link(to="/") Logout
+                
+    .form-container
+        span.label QR Code
+        .qrcode-center
+            .d-flex-center
+                qr-code(text="Text to encode" size="200" bg-color="#F0F0F0" color="#213555")
+
+            h3 23-A-00045
+            h2 Raldin C. Disomimba
+
+            a.button-link(href="#!") Logout
+
+
+</template>
                 
 <style scoped>
 
