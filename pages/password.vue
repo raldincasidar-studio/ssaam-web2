@@ -1,14 +1,14 @@
 <template lang="pug">
 .container 
     h3 Welcome back
-    h2 Raldin C. Disomimba
+    h2(style="text-transform: uppercase") {{ $store.state.userStorage.studentId }}
 
 
     .form 
-        label Your Password
-        input(type="password")
+        label Your Last Name
+        input(type="password" v-model="password")
 
-    nuxt-link.button(to='/get-started') LOGIN
+    a.button(@click="loginTest()") LOGIN
 </template>
         
         <style scoped>
@@ -91,7 +91,6 @@
             font-size: 17px;
             color: #213555;
             background-color: #E5D283;
-            border-right: 5px solid #213555;
             border-bottom: 5px solid #213555;
             text-decoration: none;
             display: inline-block;
@@ -105,15 +104,45 @@
             border-bottom: 0;
             border-right: 0;
             margin-top: 35px;
-            margin-left: 5px;
           }
         }
         </style>
         
         <script>
-        import Vue from 'vue'
+        export default {
+          data() {
+            return {
+              password: ''
+            }
+          },
+
+          methods: {
+
+            loginTest: function() {
+
+              this.$axios.post('/SSAAM/API-Services/StudentAccount/Login', {
+                student_id: this.$store.state.userStorage.studentId,
+                password: this.password
+              }).then(response => {
+                
+                if (response.data.Result[0].fullname) {
+                  this.$store.commit('userStorage/setLoginSession', {
+                      studentId: response.data.Result[0].student_id,
+                      name: response.data.Result[0].fullname,
+                  })
+                  this.$router.push('/dashboard');
+                }
+                else {
+                  alert('Incorrect Password');
+                }
+                
+              }).catch(err => {
+                console.error(err);
+              })
+
+            }
+
+          },
+        }
         
-        export default Vue.extend({
-          name: 'IndexPage'
-        })
-        
+        </script>

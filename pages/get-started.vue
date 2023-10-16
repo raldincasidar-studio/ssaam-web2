@@ -6,9 +6,9 @@
 
     .form 
         label Input your Student ID 
-        input(type="text" placeholder="YY-A-00000")
+        input(type="text" placeholder="YY-A-00000" v-model="studentId")
 
-    nuxt-link.button(to='/registration') CONTINUE
+    a.button(@click="register()") CONTINUE
 </template>
     
     <style scoped>
@@ -99,12 +99,67 @@
         margin-top: 35px;
       }
     }
+
+    @media only screen and (max-width: 769px) {
+
+      .container {
+          /* display: none; */
+          padding: 15px;
+
+          & > img {max-width: 200px;}
+
+          h2 {
+            font-size: 30px;
+          }
+
+          .form {
+            max-width: 100%;
+            label {
+              font-size: 15px;
+            }
+
+            input {
+              max-width: calc(100% - 40px);
+            }
+          }
+      }
+    }
     </style>
     
-    <script>
-    import Vue from 'vue'
-    
-    export default Vue.extend({
-      name: 'IndexPage'
-    })
-    
+  <script>
+  export default {
+    data() {
+      return {  
+        studentId: '',
+        programs: [],
+        college: [],
+      }
+    },
+
+    methods: {
+      async register() {
+
+        let response;
+
+        try {
+          response = await this.$axios.post('/SSAAM/API-Services/StudentAccount/ValidateStudent', {
+            student_id: this.studentId
+          })
+        } catch (error) {
+          console.error(error);
+        }
+
+        if (response.data.Result[0].Status == "VALID") {
+          this.$store.commit('userStorage/setStudentId', this.studentId)
+          this.$router.push('/password');
+        } else {
+          this.$store.commit('userStorage/setStudentId', this.studentId)
+          this.$router.push('/registration');
+        }
+
+
+
+      },
+    }
+  }
+  </script>

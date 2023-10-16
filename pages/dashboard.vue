@@ -1,7 +1,7 @@
 <template lang="pug">
 .container 
     h3 Welcome!
-    h2 Raldin C. Disomimba 
+    h2 {{ $store.state.userStorage.loginSession.name.firstname }} {{ $store.state.userStorage.loginSession.name.middlename }} {{ $store.state.userStorage.loginSession.name.lastname }} {{ $store.state.userStorage.loginSession.name.suffix }}
 
 
     .form-container
@@ -9,18 +9,18 @@
         
         .flex-row
                 a.button-link(href="#!") View Information
-                nuxt-link.button-link(to="/") Logout
+                a.button-link(href="#!" @click="logOut()") Logout
                 
     .form-container
         span.label QR Code
         .qrcode-center
             .d-flex-center
-                qr-code(text="Text to encode" size="200" bg-color="#F0F0F0" color="#213555")
+                qr-code(:text="$store.state.userStorage.loginSession.studentId || 'ERROR'" :size="200" bg-color="#F0F0F0" color="#213555")
 
-            h3 23-A-00045
-            h2 Raldin C. Disomimba
+            h3 {{ $store.state.userStorage.loginSession.studentId }}
+            h2 {{ $store.state.userStorage.loginSession.name.firstname }} {{ $store.state.userStorage.loginSession.name.middlename }} {{ $store.state.userStorage.loginSession.name.lastname }} {{ $store.state.userStorage.loginSession.name.suffix }}
 
-            a.button-link(href="#!") Logout
+            a.button-link(href="#!" @click="logOut()") Logout
 
 
 </template>
@@ -265,6 +265,29 @@
     }
 
 }
+
+@media only screen and (max-width: 769px) {
+
+    .container {
+        /* display: none; */
+        padding: 30px;
+
+        & > h3 {
+            font-size: 16px !important;
+
+        }
+
+        & > h2 {
+            font-size: 30px;
+        }
+    }
+}
+
+@media only screen and (max-width: 481px) {
+    .flex-row {
+        flex-wrap: wrap;
+    }
+}
 </style>
                 
 <script>
@@ -285,6 +308,11 @@ methods: {
     },
     goBackStep() {
         this.step = this.step - 1;
+    },
+
+    logOut(){
+        this.$store.commit('userStorage/setLoginSession', {});
+        this.$router.replace('/');
     },
 
     processSCData() {

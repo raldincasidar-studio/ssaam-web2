@@ -88,6 +88,18 @@
     margin-top: 35px;
   }
 }
+
+@media only screen and (max-width: 769px) {
+
+  .container {
+      /* display: none; */
+      padding: 30px;
+      img.ssaam-logo {
+        max-width: 400px;
+        margin: -15px 0;
+      }
+  }
+}
 </style>
 
 <script>
