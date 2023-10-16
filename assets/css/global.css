@@ -1,0 +1,31 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Regular.ttf') format('woff');
+    /* You can also specify other font formats like 'ttf' and 'otf' */
+    font-weight: normal;
+  }
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Bold.ttf') format('woff');
+    /* You can also specify other font formats like 'ttf' and 'otf' */
+    font-weight: bold;
+  }
+
+
+* {
+    font-family: 'Poppins';
+    margin: 0;
+    padding: 0;
+    box-sizing: 0;
+    outline: 0;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s;
+}
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}
