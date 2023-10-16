@@ -8,7 +8,7 @@
         label Your Last Name
         input(type="password" v-model="password")
 
-    a.button(@click="loginTest()") LOGIN
+    button.button(@click="loginTest()" :disabled="isLoading") {{ isLoading ? 'Loading ...' : 'LOGIN' }}
 </template>
         
         <style scoped>
@@ -91,6 +91,7 @@
             font-size: 17px;
             color: #213555;
             background-color: #E5D283;
+            border: 0;
             border-bottom: 5px solid #213555;
             text-decoration: none;
             display: inline-block;
@@ -105,6 +106,13 @@
             border-right: 0;
             margin-top: 35px;
           }
+
+          .button:disabled {
+            border-bottom: 0;
+            border-right: 0;
+            margin-top: 35px;
+            background-color: grey;
+          }
         }
         </style>
         
@@ -112,7 +120,8 @@
         export default {
           data() {
             return {
-              password: ''
+              password: '',
+              isLoading: false,
             }
           },
 
@@ -120,6 +129,8 @@
 
             loginTest: function() {
 
+
+              this.isLoading = true;
               this.$axios.post('/SSAAM/API-Services/StudentAccount/Login', {
                 student_id: this.$store.state.userStorage.studentId,
                 password: this.password
@@ -133,8 +144,11 @@
                   this.$router.push('/dashboard');
                 }
                 else {
+                  this.password = '';
                   alert('Incorrect Password');
                 }
+
+                this.isLoading = false;
                 
               }).catch(err => {
                 console.error(err);

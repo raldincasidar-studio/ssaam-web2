@@ -8,7 +8,7 @@
         label Input your Student ID 
         input(type="text" placeholder="YY-A-00000" v-model="studentId")
 
-    a.button(@click="register()") CONTINUE
+    button.button(@click="register()" :disabled="isLoading") {{ isLoading ? 'Loading ...' : 'CONTINUE' }}
 </template>
     
     <style scoped>
@@ -84,6 +84,7 @@
         font-size: 17px;
         color: #213555;
         background-color: #E5D283;
+        border: 0;
         border-bottom: 5px solid #213555;
         text-decoration: none;
         display: inline-block;
@@ -91,9 +92,17 @@
         text-transform: uppercase;
         margin-top: 30px;
         transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+        outline: 0;
       }
     
       .button:active {
+        border-bottom: 0;
+        border-right: 0;
+        margin-top: 35px;
+      }
+
+      .button:disabled {
+        background-color: grey;
         border-bottom: 0;
         border-right: 0;
         margin-top: 35px;
@@ -133,11 +142,14 @@
         studentId: '',
         programs: [],
         college: [],
+        isLoading: false,
       }
     },
 
     methods: {
       async register() {
+
+        this.isLoading = true;
 
         let response;
 
@@ -147,14 +159,18 @@
           })
         } catch (error) {
           console.error(error);
+          alert('Something went wrong');
+          this.isLoading = false;
         }
 
         if (response.data.Result[0].Status == "VALID") {
           this.$store.commit('userStorage/setStudentId', this.studentId)
           this.$router.push('/password');
+          this.isLoading = false;
         } else {
           this.$store.commit('userStorage/setStudentId', this.studentId)
           this.$router.push('/registration');
+          this.isLoading = false;
         }
 
 

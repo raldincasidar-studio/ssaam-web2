@@ -1,7 +1,7 @@
 <template lang="pug">
 .container 
     h3 Your Student ID
-    h2 {{ $store.state.userStorage.studentId }}
+    h2(style="text-transform: uppercase") {{ $store.state.userStorage.studentId }}
 
     .errors(v-if="errors.length")
         a.close-btn(href="#!" @click="errors = []") [X]
@@ -127,7 +127,7 @@
 
     .dflex 
         a.button(href='#!' @click="goBackStep()" v-if="step > 1") Back
-        a.button(href='#!' @click="register()" v-if="step == 3") CONFIRM AND SAVE DATA
+        a.button(href='#!' @click="register()" v-if="step == 3") {{ isLoading ? 'Loading ...' : 'CONFIRM AND SAVE DATA' }}
         a.button(href='#!' @click="nextStep()" v-if="step != 3") CONTINUE
 </template>
             
@@ -342,6 +342,13 @@
     border-right: 0;
     margin-top: 35px;
     }
+
+    .button:disabled {
+        background-color: gray;
+        border-bottom: 0;
+        border-right: 0;
+        margin-top: 35px;
+    }
 }
 
 
@@ -411,6 +418,8 @@ data() {
 
 
         errors: [],
+
+        isLoading: false,
 
 
         first_name: '',
@@ -543,6 +552,8 @@ methods: {
 
     async register() {
 
+
+        this.isLoading = true;
         const errors = [];
     
         if (this.first_name == "") errors.push('First name field is empty')
@@ -607,13 +618,17 @@ methods: {
                     name: response.data.Result[0].fullname,
                 })
                 this.$router.push('/dashboard');
+                this.isLoading = false;
             } else {
                 console.error(response.data);
                 alert('error');
+                this.isLoading = false;
             }
 
         } catch (error) {
             console.error('ERROR IN SENDING: ', error);
+            alert('Something went wrong');
+            this.isLoading = false;
         }
 
         this.$axios.post('API-Services/Attachment/Insert', {
@@ -656,6 +671,8 @@ methods: {
             })
         }
 
+        
+        this.isLoading = false;
 
     },
 
