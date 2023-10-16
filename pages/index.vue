@@ -2,7 +2,7 @@
 .container 
   h2 Welcome to 
   img.ssaam-logo(src="/ssaam_logo.png")
-  p JRMSU Students’ School Activity and Attendance Management {{ $store.state.userStorage.counter }}
+  p JRMSU Students’ School Activity and Attendance Management
   nuxt-link.button(to='/get-started') Get Started
 
 
