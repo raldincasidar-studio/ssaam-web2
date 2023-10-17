@@ -32,7 +32,7 @@ export default {
   },
 
   axios: {
-    baseURL: 'http://192.168.254.136', // Used as fallback if no runtime config is provided
+    baseURL: 'http://119.92.168.226', // Used as fallback if no runtime config is provided
     withCredentials: true,
     debug: true,
     headers: {
