@@ -163,6 +163,8 @@
           this.isLoading = false;
         }
 
+        console.log(response);
+
         if (response.data.Result[0].Status == "VALID") {
           this.$store.commit('userStorage/setStudentId', this.studentId)
           this.$router.push('/password');

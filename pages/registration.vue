@@ -9,11 +9,18 @@
         ul
             li(v-for="error in errors" :key="error") {{ error }}
 
+    input(type="file" style="display: none" accept="image/*" ref="id_picture" @change="processIPData()")
     transition(name="fade" mode="out-in")
 
         .form-container(v-if="step == 1" key="1")
             span.label Basic Information Details
             
+            .flex-row
+                .form-group(style="text-align: center; justify-content: center")
+                    .profile-container
+                        .div-profile-image-container(:style="`background: url(${  profile_pic_preview || 'https://st4.depositphotos.com/14903220/22197/v/450/depositphotos_221970610-stock-illustration-abstract-sign-avatar-icon-profile.jpg' })`")
+                        button.button-link(@click="$refs.id_picture.click()") UPLOAD PROFILE
+
             .flex-row
                 .form-group
                     label First Name
@@ -26,7 +33,15 @@
                     input(type="text" placeholder="Luna" v-model="last_name")
                 .form-group
                     label Suffix
-                    input.short(type="text" placeholder="Jr" v-model="suffix")
+                    //- input.short(type="text" placeholder="Jr" v-model="suffix")
+                    select(name="suffix" v-model="suffix")
+                        option(value="") N/A
+                        option(value="JR") JR
+                        option(value="SR") SR
+                        option(value="II") II
+                        option(value="III") III
+                        option(value="IV") IV
+                        option(value="V") V
             .flex-row
                 .form-group
                     label Contact Number
@@ -103,7 +118,7 @@
                         //- option(value="Major 7") Major 7
                         //- option(value="Major 8") Major 8
 
-        .form-container(v-if="step == 3" key="3")
+        .form-container(v-if="false" key="3")
             span.label Submit Attachment
             
             .flex-row
@@ -114,7 +129,7 @@
                 .form-group
                     label ID Picture
                     input(type="text" readonly style="cursor: pointer" v-model="ip_filename" placeholder="Attach File" @click="$refs.id_picture.click()")
-                    input(type="file" style="display: none" accept="image/*" ref="id_picture" @change="processIPData()")
+                    
             .flex-row
                 .form-group
                     label Medical Requirements
@@ -127,8 +142,8 @@
 
     .dflex 
         a.button(href='#!' @click="goBackStep()" v-if="step > 1") Back
-        a.button(href='#!' @click="register()" v-if="step == 3") {{ isLoading ? 'Loading ...' : 'CONFIRM AND SAVE DATA' }}
-        a.button(href='#!' @click="nextStep()" v-if="step != 3") CONTINUE
+        a.button(href='#!' @click="register()" v-if="step == 2") {{ isLoading ? 'Loading ...' : 'CONFIRM AND SAVE DATA' }}
+        a.button(href='#!' @click="nextStep()" v-if="step != 2") CONTINUE
 </template>
             
 <style scoped>
@@ -351,6 +366,41 @@
     }
 }
 
+.profile-container {
+    
+    max-width: 150px;
+
+    .div-profile-image-container {
+        width: 100%;
+        background-color: red;
+        padding-bottom: 100%;
+        border-radius: 50%;
+        background-size: cover !important;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+}
+
+.button-link {
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #213555;
+    border: 2px solid #e3e3e3;
+    padding: 10px 25px;
+    display: inline-block;
+    border-radius: 999999999999px;
+    margin: 10px;
+    border-bottom: 5px solid #e3e3e3;
+    transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    &:active {
+        border-bottom: 2px solid #e3e3e3;
+        margin-top: 13px;
+    }
+}
+
+
 
 @media only screen and (max-width: 769px) {
 
@@ -414,6 +464,7 @@ data() {
         ip_filename: '',
         mr_filename: '',
         w_filename: '',
+        profile_pic_preview: '',
 
 
 
@@ -514,16 +565,19 @@ methods: {
 
     },
 
-    processIPData() {
+    async processIPData() {
 
         const file = this.$refs.id_picture.files[0];
 
         if (file) {
             this.ip_filename = file.name;
+            this.profile_pic_preview = await this.toDataURL(file)
         } else {
             this.ip_filename = '';
+            this.profile_pic_preview = ''
         }
 
+        console.log(this.profile_pic_preview);
     },
 
     processMRData() {
@@ -569,7 +623,7 @@ methods: {
         if (this.semester == "") errors.push('Semester field is empty')
         if (this.year_level == "") errors.push('Year Level field is empty')
         if (this.school_year == "") errors.push('Year Level field is empty')
-        if (this.sc_filename == "") errors.push('Student Copy is empty')
+        // if (this.sc_filename == "") errors.push('Student Copy is empty')
         if (this.ip_filename == "") errors.push('ID Picture is empty')
         // if (this.mr_filename == "") errors.push('Medical Requirements is empty')
         // if (this.w_filename == "") errors.push('Waiver is empty')
@@ -582,6 +636,9 @@ methods: {
 
         let response; 
         try {
+
+            console.log('files: ', this.$refs.id_picture.files[0]);
+
             const data = {
             student_id: this.$store.state.userStorage.studentId,
             fullname: {
@@ -631,45 +688,45 @@ methods: {
             this.isLoading = false;
         }
 
-        this.$axios.post('API-Services/Attachment/Insert', {
-            student_id: '23-A-00045',
-            attachment_description: {
-                file_type: 'student_copy',
-            },
-            attachment_data: this.toDataURL(this.$refs.student_copy.files[0])
+        // this.$axios.post('/SSAAM/API-Services/Attachment/Insert', {
+        //     student_id: '23-A-00045',
+        //     attachment_description: {
+        //         file_type: 'student_copy',
+        //     },
+        //     attachment_data: this.toDataURL(this.$refs.student_copy.files[0])
                 
-                // sex: this.sex;
-        }).then(data => {
-            console.log('STUDENT_COPY SUCCESS', data)
-        })
+        //         // sex: this.sex;
+        // }).then(data => {
+        //     console.log('STUDENT_COPY SUCCESS', data)
+        // })
 
-        if (this.medical_requirements) {
-            this.$axios.post('API-Services/Attachment/Insert', {
-                student_id: '23-A-00045',
-                attachment_description: {
-                    status: 'eh?'
-                },
-                attachment_data: this.toDataURL(this.$refs.medical_requirements.files[0])
+        // if (this.medical_requirements) {
+        //     this.$axios.post('/SSAAM/API-Services/Attachment/Insert', {
+        //         student_id: '23-A-00045',
+        //         attachment_description: {
+        //             status: 'eh?'
+        //         },
+        //         attachment_data: this.toDataURL(this.$refs.medical_requirements.files[0])
                     
-                    // sex: this.sex;
-            }).then(data => {
-                console.log('MEDICAL_REQUIREMENT SUCCESS', data)
-            })
-        }
+        //             // sex: this.sex;
+        //     }).then(data => {
+        //         console.log('MEDICAL_REQUIREMENT SUCCESS', data)
+        //     })
+        // }
 
-        if (this.waiver) {
-            this.$axios.post('API-Services/Attachment/Insert', {
-                student_id: '23-A-00045',
-                attachment_description: {
-                    status: 'eh?'
-                },
-                attachment_data: this.toDataURL(this.$refs.waiver.files[0])
+        // if (this.waiver) {
+        //     this.$axios.post('/SSAAM/API-Services/Attachment/Insert', {
+        //         student_id: '23-A-00045',
+        //         attachment_description: {
+        //             status: 'eh?'
+        //         },
+        //         attachment_data: this.toDataURL(this.$refs.waiver.files[0])
                     
-                    // sex: this.sex;
-            }).then(data => {
-                console.log('WAIVER SUCCESS', data)
-            })
-        }
+        //             // sex: this.sex;
+        //     }).then(data => {
+        //         console.log('WAIVER SUCCESS', data)
+        //     })
+        // }
 
         
         this.isLoading = false;
