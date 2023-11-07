@@ -150,10 +150,10 @@
 
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .3s;
+    transition: opacity .3s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+    opacity: 0;
 }
 
 
@@ -501,36 +501,46 @@ data() {
 
 
 mounted() {
-      this.$axios.post('/SSAAM/API-Services/Course/GetRequest', {
+        this.$axios.post('/SSAAM/API-Services/Course/GetRequest', {
         request: "GET_PROGRAM"
-      }).then(data => {
+        }).then(data => {
         const results = data.data.Result;
 
         this.programs = results;
         console.log(results);
-      }).catch(err => {
+        }).catch(err => {
         console.error(err);
-      })
-      this.$axios.post('/SSAAM/API-Services/Course/GetRequest', {
+        })
+        this.$axios.post('/SSAAM/API-Services/Course/GetRequest', {
         request: "GET_COLLEGE"
-      }).then(data => {
+        }).then(data => {
         const results = data.data.Result;
 
         this.colleges = results;
         console.log(results);
-      }).catch(err => {
+        }).catch(err => {
         console.error(err);
-      })
-      this.$axios.post('/SSAAM/API-Services/Course/GetRequest', {
-        request: "GET_MAJOR"
-      }).then(data => {
-        const results = data.data.Result;
+        })
+        this.$axios.post('/SSAAM/API-Services/Course/GetRequest', {
+            request: "GET_MAJOR"
+        }).then(data => {
+            const results = data.data.Result;
 
-        this.majors = results;
-        console.log(results);
-      }).catch(err => {
-        console.error(err);
-      })
+            this.majors = results;
+            console.log(results);
+        }).catch(err => {
+            console.error(err);
+        })
+        this.$axios.post('/SSAAM/API-Services/StudentAccount/FetchID', {
+            student_id: this.$store.state.userStorage.studentId
+        }).then(data => {
+            const results = data;
+            
+            // console.log(results)
+            console.log('Fetch Id Result', results);
+        }).catch(err => {
+            console.error(err);
+        })
     },  
 
 methods: {

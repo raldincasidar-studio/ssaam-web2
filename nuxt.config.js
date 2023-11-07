@@ -7,7 +7,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "ssaam-web",
+    title: "SSAAM - JRMSU Main Campus",
     htmlAttrs: {
       lang: "en",
     },

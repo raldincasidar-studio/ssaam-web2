@@ -10,7 +10,7 @@
         .flex-row
                 a.button-link(href="#!") View Information
                 a.button-link(href="#!") Upload Attachment
-                a.button-link(href="#!") Update Information
+                //- a.button-link(href="#!") Update Information
                 a.button-link(href="#!" @click="logOut()") Logout
                 
     .form-container
@@ -29,10 +29,25 @@
 
         table.attachments 
             tr
-                td #[span.blocks ID Picture] #[span.tag(class="waiting") WAITING]
+                td #[span.blocks Student Copy] #[span.tag(:class="getStatusPerType(status_data, 'student_copy')" v-if="status_data") {{ getStatusPerType(status_data, 'student_copy') }}]
                 td(style="text-align: center") 
-                    button.button-link(href="#!" @click="$refs.id_picture.click()" :disabled="id_picture_loading") {{ id_picture_loading ? 'UPLOADING ...' : 'UPLOAD FILE' }}
+                    button.button-link(href="#!" @click="$refs.student_copy.click()" :disabled="student_copy_loading || ['accepted', 'pending'].includes(getStatusPerType(status_data, 'student_copy'))") {{ student_copy_loading ? 'UPLOADING ...' : 'UPLOAD FILE' }}
+                    input(style="display: none" type="file" accept="image/*,pdf" ref="student_copy" @change="updateStudentCopy()")
+            tr
+                td #[span.blocks ID Picture] #[span.tag(:class="getStatusPerType(status_data, 'id_picture')" v-if="status_data")  {{ getStatusPerType(status_data, 'id_picture') }}]
+                td(style="text-align: center") 
+                    button.button-link(href="#!" @click="$refs.id_picture.click()" :disabled="id_picture_loading || ['accepted', 'pending'].includes(getStatusPerType(status_data, 'id_picture'))") {{ id_picture_loading ? 'UPLOADING ...' : 'UPLOAD FILE' }}
                     input(style="display: none" type="file" accept="image/*" ref="id_picture" @change="updateIDPicture()")
+            tr
+                td #[span.blocks Medical Requirements] #[span.tag(:class="getStatusPerType(status_data, 'medical_requirements')" v-if="status_data")  {{ getStatusPerType(status_data, 'medical_requirements') }}]
+                td(style="text-align: center") 
+                    button.button-link(href="#!" @click="$refs.medical_requirements.click()" :disabled="medical_requirements_loading || ['accepted', 'pending'].includes(getStatusPerType(status_data, 'medical_requirements'))") {{ medical_requirements_loading ? 'UPLOADING ...' : 'UPLOAD FILE' }}
+                    input(style="display: none" type="file" accept="image/*" ref="medical_requirements" @change="updateMedicalRequirements()")
+            tr
+                td #[span.blocks Waiver] #[span.tag(:class="getStatusPerType(status_data, 'waiver')" v-if="status_data")  {{ getStatusPerType(status_data, 'waiver') }}]
+                td(style="text-align: center") 
+                    button.button-link(href="#!" @click="$refs.waiver.click()" :disabled="waiver_loading || ['accepted', 'pending'].includes(getStatusPerType(status_data, 'waiver'))") {{ waiver_loading ? 'UPLOADING ...' : 'UPLOAD FILE' }}
+                    input(style="display: none" type="file" accept="image/*" ref="waiver" @change="updateWaiver()")
             //- tr
             //-     td #[span.blocks Waiver] #[span.tag(class="waiting") WAITING]
             //-     td(style="text-align: center") 
@@ -48,97 +63,97 @@
 
             //-         transition(name="fade" mode="out-in")
 
-    .form-container
-        span.label Basic Information Details
+    //- .form-container
+    //-     span.label Basic Information Details
         
-        .flex-row
-            .form-group
-                label First Name
-                input(type="text" placeholder="Juan" v-model="first_name")
-            .form-group
-                label Middle Name
-                input(type="text" placeholder="Ponce" v-model="middle_name")
-            .form-group
-                label Last Name
-                input(type="text" placeholder="Luna" v-model="last_name")
-            .form-group
-                label Suffix
-                input.short(type="text" placeholder="Jr" v-model="suffix")
-        .flex-row
-            .form-group
-                label Contact Number
-                input(type="text" placeholder="+639517955767" v-model="contact_number")
-            .form-group
-                label Email Address
-                input(type="text" placeholder="juan@gmail.com" v-model="email")
-            .form-group
-                label Sex
-                //- input(type="text" placeholder="Juan")
-                select(name="sex" v-model="sex")
-                    option(disabled) -- Select --
-                    option(value="Male") Male
-                    option(value="Female") Female
+    //-     .flex-row
+    //-         .form-group
+    //-             label First Name
+    //-             input(type="text" placeholder="Juan" v-model="first_name")
+    //-         .form-group
+    //-             label Middle Name
+    //-             input(type="text" placeholder="Ponce" v-model="middle_name")
+    //-         .form-group
+    //-             label Last Name
+    //-             input(type="text" placeholder="Luna" v-model="last_name")
+    //-         .form-group
+    //-             label Suffix
+    //-             input.short(type="text" placeholder="Jr" v-model="suffix")
+    //-     .flex-row
+    //-         .form-group
+    //-             label Contact Number
+    //-             input(type="text" placeholder="+639*********" v-model="contact_number")
+    //-         .form-group
+    //-             label Email Address
+    //-             input(type="text" placeholder="juan@gmail.com" v-model="email")
+    //-         .form-group
+    //-             label Sex
+    //-             //- input(type="text" placeholder="Juan")
+    //-             select(name="sex" v-model="sex")
+    //-                 option(disabled) -- Select --
+    //-                 option(value="Male") Male
+    //-                 option(value="Female") Female
 
-    .form-container
-        span.label Program Enrolled
+    //- .form-container
+    //-     span.label Program Enrolled
 
-        .flex-row 
-            .form-group
-                label Semester
-                select(name="semester" v-model="semester")
-                    option(value="First Semester") First Semester
-                    option(value="Second Semester") Second Semester
-            .form-group
-                label School Year
-                //- input(type="text" placeholder="2023" v-model="year_level")
-                select(name="semester" v-model="school_year")
-                    option(value="2023-2024") 2023-2024
-            .form-group
-                label Year Level
-                //- input(type="text" placeholder="2023" v-model="year_level")
-                select(name="semester" v-model="year_level")
-                    option(value="1st Year") 1st Year
-                    option(value="2nd Year") 2nd Year
-                    option(value="3rd Year") 3rd Year
-                    option(value="4th Year") 4th Year
-                    option(value="5th Year") 5th Year
+    //-     .flex-row 
+    //-         .form-group
+    //-             label Semester
+    //-             select(name="semester" v-model="semester")
+    //-                 option(value="First Semester") First Semester
+    //-                 option(value="Second Semester") Second Semester
+    //-         .form-group
+    //-             label School Year
+    //-             //- input(type="text" placeholder="2023" v-model="year_level")
+    //-             select(name="semester" v-model="school_year")
+    //-                 option(value="2023-2024") 2023-2024
+    //-         .form-group
+    //-             label Year Level
+    //-             //- input(type="text" placeholder="2023" v-model="year_level")
+    //-             select(name="semester" v-model="year_level")
+    //-                 option(value="1st Year") 1st Year
+    //-                 option(value="2nd Year") 2nd Year
+    //-                 option(value="3rd Year") 3rd Year
+    //-                 option(value="4th Year") 4th Year
+    //-                 option(value="5th Year") 5th Year
 
         
-        .flex-row
-            .form-group
-                label College
-                //- input(type="text" placeholder="Juan")
-                select(name="college" v-model="college")
-                    option(:value="college.college_code" v-for="college in colleges" :key="college.college_code") {{ college.college_description }}
-                    //- option(value="College 2") College 2
-                    //- option(value="College 3") College 3
-                    //- option(value="College 4") College 4
-                    //- option(value="College 5") College 5
-                    //- option(value="College 6") College 6
-                    //- option(value="College 7") College 7
-                    //- option(value="College 8") College 8
-            .form-group
-                label Degree Program
-                //- input(type="text" placeholder="Juan")
-                select(name="course" v-model="program_enrolled")
-                    option(:value="program.program_code" v-for="program in programs" :key="program.program_code") {{ program.program_description }}
-                    //- option(value="Program 2") Program 2
-                    //- option(value="Program 3") Program 3
-                    //- option(value="Program 4") Program 4
-                    //- option(value="Program 5") Program 5
-                    //- option(value="Program 6") Program 6
-                    //- option(value="Program 7") Program 7
-                    //- option(value="Program 8") Program 8
-            .form-group
-                label Major
-                select(name="major" v-model="major")
-                    option(:value="major.major_code" v-for="major in majors" :key="major.major_code") {{ major.major_description }}
-                    //- option(value="Major 3") Major 3
-                    //- option(value="Major 4") Major 4
-                    //- option(value="Major 5") Major 5
-                    //- option(value="Major 6") Major 6
-                    //- option(value="Major 7") Major 7
-                    //- option(value="Major 8") Major 8
+    //-     .flex-row
+    //-         .form-group
+    //-             label College
+    //-             //- input(type="text" placeholder="Juan")
+    //-             select(name="college" v-model="college")
+    //-                 option(:value="college.college_code" v-for="college in colleges" :key="college.college_code") {{ college.college_description }}
+    //-                 //- option(value="College 2") College 2
+    //-                 //- option(value="College 3") College 3
+    //-                 //- option(value="College 4") College 4
+    //-                 //- option(value="College 5") College 5
+    //-                 //- option(value="College 6") College 6
+    //-                 //- option(value="College 7") College 7
+    //-                 //- option(value="College 8") College 8
+    //-         .form-group
+    //-             label Degree Program
+    //-             //- input(type="text" placeholder="Juan")
+    //-             select(name="course" v-model="program_enrolled")
+    //-                 option(:value="program.program_code" v-for="program in programs" :key="program.program_code") {{ program.program_description }}
+    //-                 //- option(value="Program 2") Program 2
+    //-                 //- option(value="Program 3") Program 3
+    //-                 //- option(value="Program 4") Program 4
+    //-                 //- option(value="Program 5") Program 5
+    //-                 //- option(value="Program 6") Program 6
+    //-                 //- option(value="Program 7") Program 7
+    //-                 //- option(value="Program 8") Program 8
+    //-         .form-group
+    //-             label Major
+    //-             select(name="major" v-model="major")
+    //-                 option(:value="major.major_code" v-for="major in majors" :key="major.major_code") {{ major.major_description }}
+    //-                 //- option(value="Major 3") Major 3
+    //-                 //- option(value="Major 4") Major 4
+    //-                 //- option(value="Major 5") Major 5
+    //-                 //- option(value="Major 6") Major 6
+    //-                 //- option(value="Major 7") Major 7
+    //-                 //- option(value="Major 8") Major 8
 
 </template>
                 
@@ -355,6 +370,7 @@
 
     .qrcode-center {
         text-align: center;
+        margin-top: 30px;
 
         .d-flex-center {
             display: flex;
@@ -416,16 +432,21 @@ table.attachments {
             font-size: 0.7rem;
             margin: 10px;
             display: inline-block;
+            text-transform: uppercase;
 
-            &.waiting {
+            &.pending {
                 background-color: rgb(225, 185, 29);
             }
 
-            &.aproved {
+            &.accepted {
                 background-color: rgb(50, 208, 35);
             }
 
             &.declined {
+                background-color: rgb(200, 42, 42);
+            }
+
+            &.lacking {
                 background-color: rgb(200, 42, 42);
             }
         }
@@ -446,6 +467,14 @@ table.attachments {
             &:active {
                 border-bottom: 2px solid #e3e3e3;
                 margin-top: 3px;
+            }
+
+            &:disabled {
+                color: grey;
+                border-color: grey;
+                border-bottom: 2px solid grey;
+                margin-top: 3px;
+                opacity: 0.6;
             }
         }
     }
@@ -502,29 +531,47 @@ data() {
         mr_filename: '',
         w_filename: '',
         id_picture_loading: false,
+        student_copy_loading: false,
+        medical_requirements_loading: false,
+        waiver_loading: false,
+        status_data: [],
     }
 },
 
 async mounted() {
-
-    let response;
-    try {
-            response = await this.$axios.post('/SSAAM/API-Services/Attachment/GetAttachmentRecord', {
-                request: "ALL",
-                    
-                    // sex: this.sex;
-            })
-        } catch (error) {
-            alert('Error 1001! Contact Department Head');
-            console.log(error);
-            return;
-        }
-
-        console.log(response);
-
+    this.initializeStatus();
 },
 
 methods: {
+
+    async initializeStatus() {
+
+        
+        let response;
+        try {
+                response = await this.$axios.post('/SSAAM/API-Services/Attachment/GETATTACHMENTstatus', {
+                    student_id: this.$store.state.userStorage.loginSession?.studentId,
+                        
+                        // sex: this.sex;
+                })
+            } catch (error) {
+                alert('Error 1001! Contact Department Head');
+                console.log(error);
+                return;
+            }
+
+            this.status_data = response.data.Result;
+
+            // console.log(this.getStatusPerType(response.data.Result, 'waiver'));
+
+
+    },
+
+    getStatusPerType(data, status) {
+        console.log(data);
+        const filter = data.filter(data => data.attachment_description.file_type == status); 
+        return filter[0]?.attachment_description.status || 'lacking';
+    },
 
     toDataURL(image) {
         return new Promise((resolve, reject) => {
@@ -540,20 +587,23 @@ methods: {
         const file = this.$refs.id_picture.files[0];
         
         if (!file) {
-            alert('Error: File invalid. Not uploaded')
+            alert('Error: File invalid. Not uploaded');
+            return;
         }
 
         this.id_picture_loading = true;
 
         let response;
 
+        console.log('Error: ', this.toDataURL(this.$refs.id_picture.files[0]));
+
         try {
             response = await this.$axios.post('/SSAAM/API-Services/Attachment/Insert', {
                 student_id: this.$store.state.userStorage.loginSession?.studentId,
                 attachment_description: {
-                    file_type: "waiver",
+                    file_type: "id_picture",
                 },
-                attachment_data: this.toDataURL(file)
+                attachment_data: await this.toDataURL(file)
                     
                     // sex: this.sex;
             })
@@ -566,6 +616,128 @@ methods: {
 
         console.log(response);
         this.id_picture_loading = false;
+        this.initializeStatus();
+        alert('Uploaded successfully');
+
+
+    },
+
+    async updateStudentCopy() {
+        
+        const file = this.$refs.student_copy.files[0];
+        
+        if (!file) {
+            alert('Error: File invalid. Not uploaded');
+            return;
+        }
+
+        this.student_copy_loading = true;
+
+        let response;
+
+        console.log('Error: ', this.toDataURL(this.$refs.student_copy.files[0]));
+
+        try {
+            response = await this.$axios.post('/SSAAM/API-Services/Attachment/Insert', {
+                student_id: this.$store.state.userStorage.loginSession?.studentId,
+                attachment_description: {
+                    file_type: "student_copy",
+                },
+                attachment_data: await this.toDataURL(file)
+                    
+                    // sex: this.sex;
+            })
+        } catch (error) {
+            alert('Error 1001! Contact Department Head');
+            console.log(error);
+            this.student_copy_loading = false;
+            return;
+        }
+
+        console.log(response);
+        this.student_copy_loading = false;
+        this.initializeStatus();
+        alert('Uploaded successfully');
+
+
+    },
+
+    async updateMedicalRequirements() {
+        
+        const file = this.$refs.medical_requirements.files[0];
+        
+        if (!file) {
+            alert('Error: File invalid. Not uploaded');
+            return;
+        }
+
+        this.medical_requirements_loading = true;
+
+        let response;
+
+        console.log('Error: ', this.toDataURL(this.$refs.medical_requirements.files[0]));
+
+        try {
+            response = await this.$axios.post('/SSAAM/API-Services/Attachment/Insert', {
+                student_id: this.$store.state.userStorage.loginSession?.studentId,
+                attachment_description: {
+                    file_type: "medical_requirements",
+                },
+                attachment_data: await this.toDataURL(file)
+                    
+                    // sex: this.sex;
+            })
+        } catch (error) {
+            alert('Error 1001! Contact Department Head');
+            console.log(error);
+            this.medical_requirements_loading = false;
+            return;
+        }
+
+        console.log(response);
+        this.medical_requirements_loading = false;
+        this.initializeStatus();
+        alert('Uploaded successfully');
+
+
+    },
+
+    async updateWaiver() {
+        
+        const file = this.$refs.waiver.files[0];
+        
+        if (!file) {
+            alert('Error: File invalid. Not uploaded');
+            return;
+        }
+
+        this.waiver_loading = true;
+
+        let response;
+
+        console.log('Error: ', this.toDataURL(this.$refs.waiver.files[0]));
+
+        try {
+            response = await this.$axios.post('/SSAAM/API-Services/Attachment/Insert', {
+                student_id: this.$store.state.userStorage.loginSession?.studentId,
+                attachment_description: {
+                    file_type: "waiver",
+                },
+                attachment_data: await this.toDataURL(file)
+                    
+                    // sex: this.sex;
+            })
+        } catch (error) {
+            alert('Error 1001! Contact Department Head');
+            console.log(error);
+            this.waiver = false;
+            return;
+        }
+
+        console.log(response);
+        this.waiver_loading = false;
+        this.initializeStatus();
+        alert('Uploaded successfully');
 
 
     },
