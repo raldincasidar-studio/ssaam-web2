@@ -10,6 +10,7 @@
         .flex-row
                 a.button-link(href="#!") View Information
                 a.button-link(href="#!") Upload Attachment
+                nuxt-link.button-link(to="/edit-data") Update Information
                 //- a.button-link(href="#!") Update Information
                 a.button-link(href="#!" @click="logOut()") Logout
                 
@@ -569,7 +570,7 @@ methods: {
 
     getStatusPerType(data, status) {
         console.log(data);
-        const filter = data.filter(data => data.attachment_description.file_type == status); 
+        const filter = data.filter(data => data.attachment_description?.file_type == status); 
         return filter[0]?.attachment_description.status || 'lacking';
     },
 

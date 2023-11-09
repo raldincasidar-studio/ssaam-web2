@@ -1,6 +1,6 @@
 <template lang="pug">
 .container 
-    h3 Your Student ID
+    h3 UPDATE INFORMATION FOR:
     h2(style="text-transform: uppercase") {{ $store.state.userStorage.studentId }}
 
     .errors(v-if="errors.length")
@@ -10,140 +10,140 @@
             li(v-for="error in errors" :key="error") {{ error }}
 
     input(type="file" style="display: none" accept="image/*" ref="id_picture" @change="processIPData()")
-    transition(name="fade" mode="out-in")
 
-        .form-container(v-if="step == 1" key="1")
-            span.label Basic Information Details
-            
-            .flex-row
-                .form-group(style="text-align: center; justify-content: center")
-                    .profile-container
-                        .div-profile-image-container(:style="`background: url(${  profile_pic_preview || 'https://st4.depositphotos.com/14903220/22197/v/450/depositphotos_221970610-stock-illustration-abstract-sign-avatar-icon-profile.jpg' })`")
-                        button.button-link(@click="$refs.id_picture.click()") UPLOAD PROFILE
 
-            .flex-row
-                .form-group
-                    label First Name
-                    input(type="text" placeholder="Juan" v-model="first_name")
-                .form-group
-                    label Middle Name (Opt)
-                    input(type="text" placeholder="Ponce" v-model="middle_name")
-                .form-group
-                    label Last Name
-                    input(type="text" placeholder="Luna" v-model="last_name")
-                .form-group
-                    label Suffix
-                    //- input.short(type="text" placeholder="Jr" v-model="suffix")
-                    select(name="suffix" v-model="suffix")
-                        option(value="") N/A
-                        option(value="JR") JR
-                        option(value="SR") SR
-                        option(value="II") II
-                        option(value="III") III
-                        option(value="IV") IV
-                        option(value="V") V
-            .flex-row
-                .form-group
-                    label Contact Number
-                    input(type="text" placeholder="+639517955767" v-model="contact_number")
-                .form-group
-                    label Email Address
-                    input(type="text" placeholder="juan@gmail.com" v-model="email")
-                .form-group
-                    label Sex
-                    //- input(type="text" placeholder="Juan")
-                    select(name="sex" v-model="sex")
-                        option(disabled) -- Select --
-                        option(value="Male") Male
-                        option(value="Female") Female
+    .form-container 
+        span.label Basic Information Details
+        
+        .flex-row
+            .form-group(style="text-align: center; justify-content: center")
+                .profile-container
+                    .div-profile-image-container(:style="`background: url(${  profile_pic_preview || 'https://st4.depositphotos.com/14903220/22197/v/450/depositphotos_221970610-stock-illustration-abstract-sign-avatar-icon-profile.jpg' })`")
+                    button.button-link(@click="$refs.id_picture.click()") UPLOAD PROFILE
 
-        .form-container(v-if="step == 2" key="2")
-            span.label Program Enrolled
+        .flex-row
+            .form-group
+                label First Name
+                input(type="text" placeholder="Juan" v-model="first_name")
+            .form-group
+                label Middle Name (Opt)
+                input(type="text" placeholder="Ponce" v-model="middle_name")
+            .form-group
+                label Last Name
+                input(type="text" placeholder="Luna" v-model="last_name")
+            .form-group
+                label Suffix
+                //- input.short(type="text" placeholder="Jr" v-model="suffix")
+                select(name="suffix" v-model="suffix")
+                    option(value="") N/A
+                    option(value="JR") JR
+                    option(value="SR") SR
+                    option(value="II") II
+                    option(value="III") III
+                    option(value="IV") IV
+                    option(value="V") V
+        .flex-row
+            .form-group
+                label Contact Number
+                input(type="text" placeholder="+639517955767" v-model="contact_number")
+            .form-group
+                label Email Address
+                input(type="text" placeholder="juan@gmail.com" v-model="email")
+            .form-group
+                label Sex
+                //- input(type="text" placeholder="Juan")
+                select(name="sex" v-model="sex")
+                    option(disabled) -- Select --
+                    option(value="Male") Male
+                    option(value="Female") Female
 
-            .flex-row 
-                .form-group
-                    label Semester
-                    select(name="semester" v-model="semester")
-                        option(value="First Semester") First Semester
-                        option(value="Second Semester") Second Semester
-                .form-group
-                    label School Year
-                    //- input(type="text" placeholder="2023" v-model="year_level")
-                    select(name="semester" v-model="school_year")
-                        option(value="2023-2024") 2023-2024
-                .form-group
-                    label Year Level
-                    //- input(type="text" placeholder="2023" v-model="year_level")
-                    select(name="semester" v-model="year_level")
-                        option(value="1st Year") 1st Year
-                        option(value="2nd Year") 2nd Year
-                        option(value="3rd Year") 3rd Year
-                        option(value="4th Year") 4th Year
-                        option(value="5th Year") 5th Year
+    .form-container
+        span.label Program Enrolled
 
-            
-            .flex-row
-                .form-group
-                    label College
-                    //- input(type="text" placeholder="Juan")
-                    select(name="college" v-model="college")
-                        option(:value="college.college_code" v-for="college in colleges" :key="college.college_code") {{ college.college_description }}
-                        //- option(value="College 2") College 2
-                        //- option(value="College 3") College 3
-                        //- option(value="College 4") College 4
-                        //- option(value="College 5") College 5
-                        //- option(value="College 6") College 6
-                        //- option(value="College 7") College 7
-                        //- option(value="College 8") College 8
-                .form-group
-                    label Degree Program
-                    //- input(type="text" placeholder="Juan")
-                    select(name="course" v-model="program_enrolled")
-                        option(:value="program.program_code" v-for="program in programs" :key="program.program_code") {{ program.program_description }}
-                        //- option(value="Program 2") Program 2
-                        //- option(value="Program 3") Program 3
-                        //- option(value="Program 4") Program 4
-                        //- option(value="Program 5") Program 5
-                        //- option(value="Program 6") Program 6
-                        //- option(value="Program 7") Program 7
-                        //- option(value="Program 8") Program 8
-                .form-group
-                    label Major
-                    select(name="major" v-model="major")
-                        option(:value="major.major_code" v-for="major in majors" :key="major.major_code") {{ major.major_description }}
-                        //- option(value="Major 3") Major 3
-                        //- option(value="Major 4") Major 4
-                        //- option(value="Major 5") Major 5
-                        //- option(value="Major 6") Major 6
-                        //- option(value="Major 7") Major 7
-                        //- option(value="Major 8") Major 8
+        .flex-row 
+            .form-group
+                label Semester
+                select(name="semester" v-model="semester")
+                    option(value="First Semester") First Semester
+                    option(value="Second Semester") Second Semester
+            .form-group
+                label School Year
+                //- input(type="text" placeholder="2023" v-model="year_level")
+                select(name="semester" v-model="school_year")
+                    option(value="2023-2024") 2023-2024
+            .form-group
+                label Year Level
+                //- input(type="text" placeholder="2023" v-model="year_level")
+                select(name="semester" v-model="year_level")
+                    option(value="1st Year") 1st Year
+                    option(value="2nd Year") 2nd Year
+                    option(value="3rd Year") 3rd Year
+                    option(value="4th Year") 4th Year
+                    option(value="5th Year") 5th Year
 
-        .form-container(v-if="false" key="3")
-            span.label Submit Attachment
-            
-            .flex-row
-                .form-group
-                    label Student Copy
-                    input(type="text" readonly style="cursor: pointer" v-model="sc_filename" placeholder="Attach File" @click="$refs.student_copy.click()")
-                    input(type="file" style="display: none" accept="image/*,pdf" ref="student_copy" @change="processSCData()")
-                .form-group
-                    label ID Picture
-                    input(type="text" readonly style="cursor: pointer" v-model="ip_filename" placeholder="Attach File" @click="$refs.id_picture.click()")
-                    
-            .flex-row
-                .form-group
-                    label Medical Requirements
-                    input(type="text" readonly style="cursor: pointer" v-model="mr_filename" placeholder="Attach File" @click="$refs.medical_requirements.click()")
-                    input(type="file" style="display: none" accept="image/*,pdf" ref="medical_requirements" @change="processMRData()")
-                .form-group
-                    label Waiver
-                    input(type="text" readonly style="cursor: pointer" v-model="w_filename" placeholder="Attach File" @click="$refs.waiver.click()")
-                    input(type="file" style="display: none" accept="image/*,pdf" ref="waiver" @change="processWData()")
+        
+        .flex-row
+            .form-group
+                label College
+                //- input(type="text" placeholder="Juan")
+                select(name="college" v-model="college")
+                    option(:value="college.college_code" v-for="college in colleges" :key="college.college_code") {{ college.college_description }}
+                    //- option(value="College 2") College 2
+                    //- option(value="College 3") College 3
+                    //- option(value="College 4") College 4
+                    //- option(value="College 5") College 5
+                    //- option(value="College 6") College 6
+                    //- option(value="College 7") College 7
+                    //- option(value="College 8") College 8
+            .form-group
+                label Degree Program
+                //- input(type="text" placeholder="Juan")
+                select(name="course" v-model="program_enrolled")
+                    option(:value="program.program_code" v-for="program in programs" :key="program.program_code") {{ program.program_description }}
+                    //- option(value="Program 2") Program 2
+                    //- option(value="Program 3") Program 3
+                    //- option(value="Program 4") Program 4
+                    //- option(value="Program 5") Program 5
+                    //- option(value="Program 6") Program 6
+                    //- option(value="Program 7") Program 7
+                    //- option(value="Program 8") Program 8
+            .form-group
+                label Major
+                select(name="major" v-model="major")
+                    option(:value="major.major_code" v-for="major in majors" :key="major.major_code") {{ major.major_description }}
+                    //- option(value="Major 3") Major 3
+                    //- option(value="Major 4") Major 4
+                    //- option(value="Major 5") Major 5
+                    //- option(value="Major 6") Major 6
+                    //- option(value="Major 7") Major 7
+                    //- option(value="Major 8") Major 8
+
+    .form-container(v-if="false" key="3")
+        span.label Submit Attachment
+        
+        .flex-row
+            .form-group
+                label Student Copy
+                input(type="text" readonly style="cursor: pointer" v-model="sc_filename" placeholder="Attach File" @click="$refs.student_copy.click()")
+                input(type="file" style="display: none" accept="image/*,pdf" ref="student_copy" @change="processSCData()")
+            .form-group
+                label ID Picture
+                input(type="text" readonly style="cursor: pointer" v-model="ip_filename" placeholder="Attach File" @click="$refs.id_picture.click()")
+                
+        .flex-row
+            .form-group
+                label Medical Requirements
+                input(type="text" readonly style="cursor: pointer" v-model="mr_filename" placeholder="Attach File" @click="$refs.medical_requirements.click()")
+                input(type="file" style="display: none" accept="image/*,pdf" ref="medical_requirements" @change="processMRData()")
+            .form-group
+                label Waiver
+                input(type="text" readonly style="cursor: pointer" v-model="w_filename" placeholder="Attach File" @click="$refs.waiver.click()")
+                input(type="file" style="display: none" accept="image/*,pdf" ref="waiver" @change="processWData()")
 
     .dflex 
-        a.button(href='#!' @click="goBackStep()" v-if="step > 1") Back
-        a.button(href='#!' @click="register()" v-if="step == 2") {{ isLoading ? 'Loading ...' : 'CONFIRM AND SAVE DATA' }}
-        a.button(href='#!' @click="nextStep()" v-if="step != 2") CONTINUE
+        nuxt-link.button(to="/dashboard") Cancel
+        a.button(href='#!' @click="register()") {{ isLoading ? 'Loading ...' : 'UPDATE DATA' }}
+        //- a.button(href='#!' @click="nextStep()" v-if="step != 2") CONTINUE
 </template>
             
 <style scoped>
@@ -534,8 +534,24 @@ mounted() {
         this.$axios.post('/SSAAM/API-Services/StudentAccount/FetchID', {
             student_id: this.$store.state.userStorage.studentId
         }).then(data => {
-            const results = data;
+            const results = data.data;
             
+            this.first_name = results.Fullname.firstname;
+            this.last_name = results.Fullname.lastname;
+            this.middle_name = results.Fullname.middlename;
+            this.profile_pic_preview = results?.Image.replace('_', '/');
+            this.contact_number = results?.ContactNo;
+            this.email = results?.Email;
+            this.sex = results?.Sex;
+            this.semester = results?.Semester;
+            this.year_level = results?.YearLevel;
+            this.school_year = results?.SchoolYear;
+            this.college = results?.College;
+            this.major = results?.Major;
+            this.program_enrolled = results?.Program;
+
+
+
             // console.log(results)
             console.log('Fetch Id Result', results);
         }).catch(err => {
@@ -634,7 +650,7 @@ methods: {
         if (this.year_level == "") errors.push('Year Level field is empty')
         if (this.school_year == "") errors.push('Year Level field is empty')
         // if (this.sc_filename == "") errors.push('Student Copy is empty')
-        if (this.ip_filename == "") errors.push('ID Picture is empty')
+        // if (this.ip_filename == "") errors.push('ID Picture is empty')
         // if (this.mr_filename == "") errors.push('Medical Requirements is empty')
         // if (this.w_filename == "") errors.push('Waiver is empty')
 
@@ -670,7 +686,7 @@ methods: {
                 },
                 contact_no: this.contact_number,
                 email_address: this.email,
-                profile: await this.toDataURL(this.$refs.id_picture.files[0])
+                profile: this.$refs.id_picture.files[0] ? await this.toDataURL(this.$refs.id_picture.files[0]) : this.profile_pic_preview
                 
                 
                 // sex: this.sex;
@@ -679,11 +695,7 @@ methods: {
             response = await this.$axios.post('/SSAAM/API-Services/StudentAccount/Update', data);
             
             if (response.data.Result) {
-
-                this.$store.commit('userStorage/setLoginSession', {
-                    studentId: response.data.Result[0].student_id,
-                    name: response.data.Result[0].fullname,
-                })
+                alert('Information Updated!')
                 this.$router.push('/dashboard');
                 this.isLoading = false;
             } else {
